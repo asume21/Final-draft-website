@@ -1,42 +1,31 @@
 #!/bin/bash
 set -e
 
-echo "Building CodedSwitch for production..."
+echo "🚀 Building CodedSwitch with simple approach..."
 
-# Install dependencies (use npm install to handle lock file sync)
-npm install
-
-# Create dist directories
+# Create dist directory
 mkdir -p dist/public
-mkdir -p dist/static
 
-# Build frontend with minimal Vite config (no Replit plugins)
-echo "Building frontend with Vite..."
-npx vite build --config vite.config.minimal.js
+# Build frontend without complex config
+echo "📦 Building frontend..."
+npx vite build --outDir dist/public
 
-# Build backend using production server (no Vite imports)
-echo "Building backend..."
+# Verify CSS was built
+CSS_FILE=$(find dist/public -name "*.css" | head -1)
+if [ -f "$CSS_FILE" ]; then
+    CSS_SIZE=$(wc -c < "$CSS_FILE")
+    echo "✅ CSS Built: $(basename "$CSS_FILE") - $CSS_SIZE bytes"
+else
+    echo "❌ No CSS file found!"
+    exit 1
+fi
+
+# Build server
+echo "🔧 Building server..."
 npx esbuild server/production.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/index.js
 
-# Create a simple static file server fallback
-cat > dist/serve-static.js << 'EOF'
-import express from 'express';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const app = express();
-
-// Serve static files
-app.use(express.static(path.join(__dirname, 'static')));
-app.use('/client', express.static(path.join(__dirname, 'static')));
-
-// Fallback to index.html for SPA
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-export default app;
-EOF
-
-echo "Build complete - using static file serving as fallback!"
+echo "✅ Simple build complete!"
+echo "📁 Files built:"
+ls -la dist/
+echo "📁 Public assets:"
+ls -la dist/public/
