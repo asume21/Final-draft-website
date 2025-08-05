@@ -6,7 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Navigation } from "@/components/layout/navigation";
 import { Sidebar } from "@/components/layout/sidebar";
 import NotFound from "@/pages/not-found";
-import Landing from "@/pages/landing";
+import SimpleLanding from "@/pages/simple-landing";
 import Dashboard from "@/pages/dashboard";
 import CodeTranslator from "@/pages/code-translator";
 import LyricLab from "@/pages/lyric-lab";
@@ -18,7 +18,7 @@ import AIAssistant from "@/pages/ai-assistant";
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={Landing} />
+      <Route path="/" component={SimpleLanding} />
       <Route path="/dashboard">
         <AppLayout>
           <Dashboard />
