@@ -3,8 +3,8 @@ set -e
 
 echo "Building CodedSwitch for production..."
 
-# Install dependencies
-npm ci
+# Install dependencies (use npm install to handle lock file sync)
+npm install
 
 # Create dist directories
 mkdir -p dist/public
