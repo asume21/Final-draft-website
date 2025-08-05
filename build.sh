@@ -1,15 +1,24 @@
 #!/bin/bash
 set -e
 
-echo "Building CodedSwitch for production..."
+echo "Building CodedSwitch..."
 
-# Install dependencies
-npm ci
+# Build frontend
+echo "Building frontend..."
+npx vite build --config vite.config.production.ts
 
-# Build frontend without custom config to avoid module resolution issues  
-NODE_ENV=production npx vite build --outDir dist/public
+# Check CSS build
+CSS_FILE=$(find dist/public/assets -name "*.css" | head -1)
+if [ -f "$CSS_FILE" ]; then
+    CSS_SIZE=$(wc -c < "$CSS_FILE")
+    echo "✅ CSS Built Successfully - Size: $CSS_SIZE bytes"
+else
+    echo "❌ CSS build failed"
+    exit 1
+fi
 
-# Build backend
-npx esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+# Build server
+echo "Building server..."
+npx esbuild server/simple.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/index.js
 
-echo "Build complete!"
+echo "✅ Build complete"
