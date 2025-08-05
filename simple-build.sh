@@ -10,9 +10,9 @@ npm ci
 mkdir -p dist/public
 mkdir -p dist/static
 
-# Copy static files
-cp -r client/index.html dist/public/
-cp -r client/src dist/static/
+# Build frontend with minimal Vite config (no Replit plugins)
+echo "Building frontend with Vite..."
+npx vite build --config vite.config.minimal.js
 
 # Build backend using production server (no Vite imports)
 echo "Building backend..."
