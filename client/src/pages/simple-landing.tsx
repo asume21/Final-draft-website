@@ -1,6 +1,8 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 
+// This landing page is specifically designed to be stable and never crash
+
 export default function SimpleLanding() {
   return (
     <div className="min-h-screen bg-github-dark text-github-text">
