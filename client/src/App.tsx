@@ -19,13 +19,41 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Landing} />
-      <Route path="/dashboard" component={Dashboard} />
-      <Route path="/code-translator" component={CodeTranslator} />
-      <Route path="/lyric-lab" component={LyricLab} />
-      <Route path="/beat-studio" component={BeatStudio} />
-      <Route path="/music-studio" component={MusicStudio} />
-      <Route path="/codebeat-studio" component={CodeBeatStudio} />
-      <Route path="/ai-assistant" component={AIAssistant} />
+      <Route path="/dashboard">
+        <AppLayout>
+          <Dashboard />
+        </AppLayout>
+      </Route>
+      <Route path="/code-translator">
+        <AppLayout>
+          <CodeTranslator />
+        </AppLayout>
+      </Route>
+      <Route path="/lyric-lab">
+        <AppLayout>
+          <LyricLab />
+        </AppLayout>
+      </Route>
+      <Route path="/beat-studio">
+        <AppLayout>
+          <BeatStudio />
+        </AppLayout>
+      </Route>
+      <Route path="/music-studio">
+        <AppLayout>
+          <MusicStudio />
+        </AppLayout>
+      </Route>
+      <Route path="/codebeat-studio">
+        <AppLayout>
+          <CodeBeatStudio />
+        </AppLayout>
+      </Route>
+      <Route path="/ai-assistant">
+        <AppLayout>
+          <AIAssistant />
+        </AppLayout>
+      </Route>
       <Route component={NotFound} />
     </Switch>
   );
@@ -46,14 +74,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
-        <Switch>
-          <Route path="/" component={Landing} />
-          <Route path="*">
-            <AppLayout>
-              <Router />
-            </AppLayout>
-          </Route>
-        </Switch>
+        <Router />
       </TooltipProvider>
     </QueryClientProvider>
   );
