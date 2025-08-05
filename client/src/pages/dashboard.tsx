@@ -74,16 +74,16 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-github-dark text-github-text pt-16">
-      <div className="flex">
+    <div className="min-h-screen bg-gray-900 text-white p-8">
+      <div className="max-w-7xl mx-auto">
         {/* Main Content */}
-        <div className="flex-1 ml-64 p-8">
+        <div className="space-y-8">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">
-              Welcome to <span className="text-gradient-purple-pink">CodedSwitch</span>
+            <h1 className="text-4xl font-bold mb-2">
+              Welcome to <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">CodedSwitch</span>
             </h1>
-            <p className="text-github-text-secondary">
+            <p className="text-gray-400 text-lg">
               Your creative coding and music workspace
             </p>
           </div>
@@ -91,14 +91,14 @@ export default function Dashboard() {
           {/* Stats Overview */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {stats.map((stat, index) => (
-              <Card key={index} className="bg-github-secondary border-github-border">
+              <Card key={index} className="bg-gray-800 border-gray-700">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-github-text-secondary text-sm">{stat.label}</p>
-                      <p className="text-2xl font-bold">{stat.value}</p>
+                      <p className="text-gray-400 text-sm">{stat.label}</p>
+                      <p className="text-2xl font-bold text-white">{stat.value}</p>
                     </div>
-                    <div className="flex items-center space-x-1 text-green-500 text-sm">
+                    <div className="flex items-center space-x-1 text-green-400 text-sm">
                       <TrendingUp className="h-4 w-4" />
                       <span>{stat.trend}</span>
                     </div>
@@ -114,13 +114,13 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {quickActions.map((action, index) => (
                 <Link key={index} href={action.href}>
-                  <Card className="bg-github-secondary border-github-border hover:border-accent-purple/50 transition-all duration-300 hover:scale-105 cursor-pointer">
+                  <Card className="bg-gray-800 border-gray-700 hover:border-purple-500/50 transition-all duration-300 hover:scale-105 cursor-pointer">
                     <CardContent className="p-6 text-center">
-                      <div className={`w-12 h-12 bg-accent-${action.color}/20 rounded-lg flex items-center justify-center mb-4 mx-auto`}>
-                        <action.icon className={`text-accent-${action.color} h-6 w-6`} />
+                      <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                        <action.icon className="text-purple-400 h-6 w-6" />
                       </div>
-                      <h3 className="font-semibold mb-2">{action.title}</h3>
-                      <p className="text-github-text-secondary text-sm">{action.description}</p>
+                      <h3 className="font-semibold mb-2 text-white">{action.title}</h3>
+                      <p className="text-gray-400 text-sm">{action.description}</p>
                     </CardContent>
                   </Card>
                 </Link>
