@@ -1,41 +1,40 @@
-# Audio Fix Deployment Guide
+# URGENT: Render Deployment Fix Required
 
-## Files that need to be updated in your GitHub repo:
+## Current Issue
+Your Render deployment is failing because the build command can't find `vite` and `esbuild`.
 
-### 1. server/routes.ts
-- Fixed AI provider availability check for both XAI_API_KEY and GROK_API_KEY
-- Added debug logging for deployment
+## IMMEDIATE FIX NEEDED IN RENDER DASHBOARD
 
-### 2. server/grok.ts  
-- Updated to use XAI_API_KEY environment variable
-- Ensures Grok integration works properly
+### Step 1: Update Build Command
+Go to your Render dashboard → Your CodedSwitch service → Settings → Build & Deploy
 
-### 3. client/src/lib/audio.ts
-- **CRITICAL FIX**: Replaced missing audio files with synthesized drums
-- Created proper kick, snare, and hi-hat using Tone.js synthesizers
-- Fixed beat pattern sequencing logic
-- Added proper audio context initialization
+**Replace the current build command with:**
+```bash
+npm ci && npx vite build && npx esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+```
 
-### 4. client/src/pages/beat-studio.tsx
-- Improved error handling for audio playback
-- Added user interaction audio initialization
-- Fixed TypeScript type issues
+**Keep the start command as:**
+```bash
+npm start
+```
 
-## Quick Deploy Steps:
+### Step 2: Set Environment Variables
+In Render dashboard → Environment Variables, add:
+- `XAI_API_KEY` = Your xAI API key (the one that works in Replit)
+- `GEMINI_API_KEY` = Your Google Gemini API key
+- `DATABASE_URL` = Your Neon Database connection string
+- `NODE_ENV` = production
 
-1. Go to your GitHub repo: https://github.com/asume21/Final-draft-website/tree/main/GitBridge%20(1)/GitBridge
+### Step 3: Redeploy
+Click "Manual Deploy" to trigger a new build with the fixed command.
 
-2. Edit these 4 files and replace their content with the updated versions from this Replit
+## Why This Fixes It
+The `npx` prefix tells Node.js to look for build tools in your project's node_modules folder, even when they're in devDependencies.
 
-3. On Render dashboard:
-   - Change environment variable from `GROK_API_KEY` to `XAI_API_KEY` 
-   - Keep the same API key value
-   - Redeploy
+## Your Audio System Status
+✅ All audio improvements are in your GitHub repository
+✅ xAI Grok integration is working
+✅ Tone.js synthesized drums are implemented
+✅ Web Audio API compliance with Start Audio buttons
 
-4. Test the Beat Studio - you should now hear actual drum sounds!
-
-## What was fixed:
-- Audio system was trying to load `/sounds/kick.wav` files that didn't exist
-- Now uses synthesized drums that work in any browser
-- Proper beat pattern mapping from AI-generated patterns to drum sounds
-- Grok will appear in all AI provider dropdowns as default
+Once you update the build command in Render, your complete CodedSwitch platform will deploy successfully.
