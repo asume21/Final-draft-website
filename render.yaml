@@ -2,38 +2,15 @@ services:
   - type: web
     name: codeswitch
     env: node
-    plan: starter
-    buildCommand: |
-      # Install all dependencies including devDependencies
-      npm install --include=dev
-      # Install Vite locally
-      npm install -D vite@latest
-      # Build the client
-      cd client
-      npm install
-      npm run build
-      # Build the server
-      cd ..
-      npm run build
-      # Verify the build output
-      ls -la dist/
-    startCommand: node dist/index.js
+    plan: free
+    buildCommand: npm ci && npx vite build && npx esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
-      - key: NODE_OPTIONS
-        value: --max-old-space-size=4096
-      - key: PORT
-        value: 10000
-      - key: DATABASE_URL
-        sync: false
-      - key: GEMINI_API_KEY
-        sync: false
       - key: XAI_API_KEY
         sync: false
-      - key: NODE_VERSION
-        value: 18.x
-    build:
-      nodeVersion: 18
-    healthCheckPath: /api/health
-    autoDeploy: true
+      - key: GEMINI_API_KEY  
+        sync: false
+      - key: DATABASE_URL
+        sync: false
