@@ -6,9 +6,9 @@ echo "🚀 Building CodedSwitch with simple approach..."
 # Create dist directory
 mkdir -p dist/public
 
-# Build frontend without complex config
+# Build frontend with NO CONFIG FILES
 echo "📦 Building frontend..."
-npx vite build --outDir dist/public
+VITE_CONFIG_FILE="" npx vite build --outDir dist/public --config /dev/null 2>/dev/null || npx vite build --outDir dist/public
 
 # Verify CSS was built
 CSS_FILE=$(find dist/public -name "*.css" | head -1)
