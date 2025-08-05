@@ -6,9 +6,9 @@ echo "🔧 FIXING BUILD PROPERLY"
 # Install dependencies
 npm install
 
-# Build using the default vite build from root directory
+# Build from client directory where index.html exists
 echo "📦 Building frontend..."
-npx vite build
+cd client && npx vite build --outDir ../dist/public && cd ..
 
 # Check if CSS was built
 CSS_FILE=$(find dist -name "*.css" | head -1)
