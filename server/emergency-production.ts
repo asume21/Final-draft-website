@@ -20,13 +20,24 @@ app.use((req, res, next) => {
   next();
 });
 
-// Basic health check - no external dependencies
+// Health check endpoints for Render
 app.get("/api/health", (req, res) => {
-  res.json({ 
+  res.status(200).json({ 
     status: "ok", 
     timestamp: new Date().toISOString(),
-    message: "Emergency production server running"
+    message: "Emergency production server running",
+    uptime: process.uptime()
   });
+});
+
+// Root health check that Render might use
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
+
+// Simple ping endpoint
+app.get("/ping", (req, res) => {
+  res.status(200).send("pong");
 });
 
 // AI Providers endpoint - simplified
