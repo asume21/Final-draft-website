@@ -17,21 +17,23 @@ app.use((req, res, next) => {
   next();
 });
 
-// Register API routes
-const httpServer = await registerRoutes(app);
+// Initialize server
+(async () => {
+  // Register API routes
+  const httpServer = await registerRoutes(app);
 
-// Serve static files for production
-if (process.env.NODE_ENV === "production") {
-  // Serve client files
-  app.use(express.static(path.join(__dirname, "static")));
-  app.use("/client", express.static(path.join(__dirname, "static")));
-  
-  // SPA fallback
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "index.html"));
+  // Serve static files for production
+  if (process.env.NODE_ENV === "production") {
+    // Serve built frontend files
+    app.use(express.static(path.join(__dirname, "public")));
+    
+    // SPA fallback for React Router
+    app.get("*", (req, res) => {
+      res.sendFile(path.join(__dirname, "public", "index.html"));
+    });
+  }
+
+  httpServer.listen(Number(port), "0.0.0.0", () => {
+    console.log(`[${new Date().toISOString()}] [express] serving on port ${port}`);
   });
-}
-
-httpServer.listen(port, "0.0.0.0", () => {
-  console.log(`[${new Date().toISOString()}] [express] serving on port ${port}`);
-});
+})();
