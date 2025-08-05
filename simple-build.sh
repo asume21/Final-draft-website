@@ -14,9 +14,9 @@ mkdir -p dist/static
 cp -r client/index.html dist/public/
 cp -r client/src dist/static/
 
-# Build backend only (skip problematic Vite build)
+# Build backend using production server (no Vite imports)
 echo "Building backend..."
-npx esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+npx esbuild server/production.ts --platform=node --packages=external --bundle --format=esm --outdir=dist --outfile=dist/index.js
 
 # Create a simple static file server fallback
 cat > dist/serve-static.js << 'EOF'
