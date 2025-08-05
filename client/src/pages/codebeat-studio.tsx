@@ -42,7 +42,7 @@ export default function CodeBeatStudio() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioInitialized, setAudioInitialized] = useState(false);
   const [volume, setVolume] = useState([75]);
-  const [aiProvider, setAiProvider] = useState("grok");
+  const [aiProvider, setAiProvider] = useState<"grok" | "gemini">("grok");
   const { toast } = useToast();
 
   const convertMutation = useMutation({
