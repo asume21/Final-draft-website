@@ -1,33 +1,26 @@
 #!/bin/bash
 set -e
 
-echo "🚨 EMERGENCY BUILD - NO CONFIG FILES"
+echo "🚀 Starting production build..."
 
-# Install dependencies first
-echo "📦 Installing dependencies..."
-npm install
+# Clean any existing builds
+rm -rf dist/ build/ .output/
 
-# Create dist directory
-mkdir -p dist/public
+# Install dependencies
+npm ci --production=false
 
-# Build with absolutely no config
-echo "🔧 Building frontend with zero config..."
-cd client && npx vite build --outDir ../dist/public --mode production && cd ..
+# Build client
+echo "📦 Building client..."
+export NODE_ENV=production
+npx vite build
 
-# Verify CSS was built
-CSS_FILE=$(find dist/public -name "*.css" | head -1)
-if [ -f "$CSS_FILE" ]; then
-    CSS_SIZE=$(wc -c < "$CSS_FILE")
-    echo "✅ CSS Built: $(basename "$CSS_FILE") - $CSS_SIZE bytes"
-else
-    echo "❌ No CSS file found!"
-    exit 1
-fi
-
-# Build server
+# Build server  
 echo "🔧 Building server..."
-npx esbuild server/production.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/index.js
+npx esbuild server/index.ts --bundle --platform=node --target=node18 --outfile=dist/server.js --external:@replit/vite-plugin-cartographer --external:@replit/vite-plugin-runtime-error-modal
 
-echo "✅ EMERGENCY BUILD COMPLETE!"
+# Copy package.json for production
+cp package.json dist/
+
+echo "✅ Production build complete!"
+echo "📁 Files ready in dist/ directory"
 ls -la dist/
-ls -la dist/public/
