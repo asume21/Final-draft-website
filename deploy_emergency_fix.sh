@@ -3,9 +3,9 @@ set -e
 
 echo "🚨 EMERGENCY STYLING FIX DEPLOYMENT"
 
-# Build with explicit configuration
-echo "Building frontend with proper CSS..."
-npx vite build --mode production
+# Build with production-specific configuration
+echo "Building frontend with production Vite config..."
+npx vite build --config vite.config.production.ts --mode production
 
 # Check CSS file was built properly  
 CSS_FILE=$(ls dist/public/assets/*.css | head -1)
