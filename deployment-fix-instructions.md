@@ -1,42 +1,32 @@
-# CodedSwitch Deployment Fix
+# CRITICAL: Fix Render Build Command
 
-## The Problem
-Render is looking for package.json in `/opt/render/project/src/package.json` but it should be in the root directory.
+## Issue
+Render is misinterpreting the build command. You need to set the COMPLETE command.
 
-## Quick Fix Options
+## EXACT BUILD COMMAND TO USE
+Copy this ENTIRE command into your Render dashboard:
 
-### Option 1: Check Repository Structure
-1. Go to: https://github.com/asume21/Final-draft-website
-2. Verify that `package.json` is visible in the root directory (not inside any folders)
-3. If files are nested in a folder, this is the problem
-
-### Option 2: Manual Render Configuration
-1. In Render dashboard, go to your service settings
-2. Set "Root Directory" to the correct path where package.json exists
-3. Or set it to empty/blank if package.json is in root
-
-### Option 3: Re-upload Project Structure
-If files were uploaded incorrectly nested:
-1. Download the `codeswitch-complete.tar.gz` from Replit again
-2. Extract it locally to verify structure
-3. Upload individual files to GitHub root directory
-
-## Correct Structure Should Be:
 ```
-Final-draft-website/
-├── package.json (ROOT LEVEL)
-├── client/
-├── server/
-├── shared/
-├── README.md
-└── other files...
+npm ci && npx vite build --config vite.config.prod.ts && npx esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
 ```
 
-## Not This:
+## Steps
+1. Go to Render dashboard
+2. Your service → Settings → Build & Deploy  
+3. DELETE the current build command completely
+4. PASTE the full command above
+5. Save and redeploy
+
+## Start Command
+Keep this as:
 ```
-Final-draft-website/
-└── some-folder/
-    ├── package.json (NESTED - WRONG)
-    ├── client/
-    └── server/
+npm start
 ```
+
+## Environment Variables
+- XAI_API_KEY
+- GEMINI_API_KEY  
+- DATABASE_URL
+- NODE_ENV = production
+
+The issue was that Render got only part of the command. You need the FULL command with npm ci at the beginning.
