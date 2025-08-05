@@ -13,8 +13,10 @@ const port = process.env.PORT || 5000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Initialize routes first
-const httpServer = await registerRoutes(app);
+// Initialize server
+(async () => {
+  // Register API routes
+  const httpServer = await registerRoutes(app);
 
 // Serve static files
 app.use(express.static(path.join(__dirname, "public")));
@@ -30,6 +32,7 @@ app.get("*", (req, res) => {
   }
 });
 
-httpServer.listen(Number(port), "0.0.0.0", () => {
-  console.log(`Server running on port ${port}`);
-});
+  httpServer.listen(Number(port), "0.0.0.0", () => {
+    console.log(`Server running on port ${port}`);
+  });
+})();
