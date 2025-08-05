@@ -17,8 +17,8 @@ else
     exit 1
 fi
 
-# Build server
-echo "Building server..."
-npx esbuild server/simple.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/index.js
+# Build PRODUCTION server
+echo "Building production server..."
+npx esbuild server/production.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/index.js
 
 echo "✅ Build complete"
