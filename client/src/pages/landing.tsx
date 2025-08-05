@@ -114,9 +114,9 @@ export default function Landing() {
             </div>
           </div>
 
-          {/* Audio Waveform Visualization */}
+          {/* Audio Waveform Visualization - Temporarily disabled */}
           <div className="flex justify-center">
-            <Waveform className="opacity-60" bars={9} />
+            <div className="w-32 h-8 bg-accent-purple/20 rounded animate-pulse"></div>
           </div>
         </div>
       </section>
