@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: codedswitch-website
+    env: node
+    plan: free
+    buildCommand: chmod +x deploy_emergency_fix.sh && ./deploy_emergency_fix.sh
+    startCommand: cd dist && node index.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: XAI_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
