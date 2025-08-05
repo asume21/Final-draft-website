@@ -18,9 +18,28 @@ app.use(express.urlencoded({ extended: true }));
   // Register API routes
   const httpServer = await registerRoutes(app);
 
-// Serve static files
-app.use(express.static(path.join(__dirname, "public")));
-app.use('/assets', express.static(path.join(__dirname, "public", "assets")));
+// Serve static files with proper headers
+app.use(express.static(path.join(__dirname, "public"), {
+  setHeaders: (res, filePath) => {
+    console.log(`Serving static file: ${filePath}`);
+    if (filePath.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+      console.log(`Set CSS content type for: ${filePath}`);
+    }
+    if (filePath.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    }
+  }
+}));
+
+// Explicitly serve assets directory
+app.use('/assets', express.static(path.join(__dirname, "public", "assets"), {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    }
+  }
+}));
 
 // SPA fallback
 app.get("*", (req, res) => {
