@@ -6,7 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Navigation } from "@/components/layout/navigation";
 import { Sidebar } from "@/components/layout/sidebar";
 import NotFound from "@/pages/not-found";
-import SimpleLandingWorking from "@/pages/simple-landing-working";
+import ProductionLanding from "@/pages/production-landing";
 import Dashboard from "@/pages/dashboard";
 import CodeTranslator from "@/pages/code-translator";
 import LyricLab from "@/pages/lyric-lab";
@@ -22,7 +22,7 @@ function Router() {
     <div>
       <Switch>
         <Route path="/">
-          <SimpleLandingWorking />
+          <ProductionLanding />
         </Route>
         <Route path="/dashboard">
           <AppLayout>
