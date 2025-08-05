@@ -40,62 +40,38 @@ export function CodeEditor({
     }
   };
 
-  const syntaxHighlight = (code: string, lang: string) => {
-    // Simple syntax highlighting for demo purposes
-    const keywords = {
-      javascript: ['function', 'const', 'let', 'var', 'if', 'else', 'for', 'while', 'return'],
-      python: ['def', 'class', 'if', 'else', 'elif', 'for', 'while', 'return', 'import'],
-      java: ['public', 'private', 'class', 'interface', 'if', 'else', 'for', 'while', 'return'],
-      typescript: ['function', 'const', 'let', 'var', 'if', 'else', 'for', 'while', 'return', 'interface', 'type']
-    };
-
-    let highlighted = code;
-    const langKeywords = keywords[lang as keyof typeof keywords] || [];
-    
-    langKeywords.forEach(keyword => {
-      const regex = new RegExp(`\\b${keyword}\\b`, 'g');
-      highlighted = highlighted.replace(regex, `<span class="text-accent-cyan">${keyword}</span>`);
-    });
-
-    // Highlight strings
-    highlighted = highlighted.replace(/"([^"]*)"/g, '<span class="text-accent-pink">"$1"</span>');
-    highlighted = highlighted.replace(/'([^']*)'/g, '<span class="text-accent-pink">\'$1\'</span>');
-
-    // Highlight comments
-    highlighted = highlighted.replace(/\/\/.*$/gm, '<span class="text-github-text-secondary">$&</span>');
-    highlighted = highlighted.replace(/#.*$/gm, '<span class="text-github-text-secondary">$&</span>');
-
-    return highlighted;
-  };
-
   return (
-    <div className={cn("bg-github-dark rounded-lg border border-github-border", className)}>
-      <div className="flex items-center justify-between p-3 border-b border-github-border">
-        <span className="text-sm font-mono text-github-text-secondary">{language}</span>
+    <div className={cn("relative bg-gray-900 border border-gray-700 rounded-lg overflow-hidden", className)}>
+      {/* Header */}
+      <div className="flex items-center justify-between bg-gray-800 px-4 py-2 border-b border-gray-700">
+        <div className="flex items-center space-x-2">
+          <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+          <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+          <span className="ml-2 text-sm text-gray-400">{language}</span>
+        </div>
         <Button
           variant="ghost"
           size="sm"
           onClick={handleCopy}
-          className="h-8 w-8 p-0"
+          className="text-gray-400 hover:text-white"
         >
-          {copied ? (
-            <Check className="h-4 w-4 text-green-500" />
-          ) : (
-            <Copy className="h-4 w-4" />
-          )}
+          {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
         </Button>
       </div>
+
+      {/* Code Content */}
       <div className="p-4">
         {readOnly ? (
-          <pre className="text-sm font-mono text-github-text whitespace-pre-wrap">
-            <code dangerouslySetInnerHTML={{ __html: syntaxHighlight(code, language) }} />
+          <pre className="text-sm font-mono text-gray-300 whitespace-pre-wrap overflow-auto">
+            <code>{code}</code>
           </pre>
         ) : (
           <textarea
             value={code}
             onChange={(e) => onChange?.(e.target.value)}
-            className="w-full h-64 bg-transparent text-sm font-mono text-github-text resize-none outline-none"
-            placeholder={`Enter your ${language} code here...`}
+            className="w-full h-64 bg-transparent text-sm font-mono text-gray-300 resize-none focus:outline-none"
+            spellCheck={false}
           />
         )}
       </div>
