@@ -3,6 +3,7 @@ import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import { createServer } from "http";
+import { registerRoutes } from "./routes";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -12,8 +13,8 @@ const port = process.env.PORT || 5000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Simple health check
-app.get("/health", (req, res) => res.send("OK"));
+// Initialize routes first
+const httpServer = await registerRoutes(app);
 
 // Serve static files
 app.use(express.static(path.join(__dirname, "public")));
@@ -29,7 +30,6 @@ app.get("*", (req, res) => {
   }
 });
 
-const httpServer = createServer(app);
 httpServer.listen(Number(port), "0.0.0.0", () => {
   console.log(`Server running on port ${port}`);
 });
