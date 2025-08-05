@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface AudioVisualizerProps {
@@ -9,74 +8,28 @@ interface AudioVisualizerProps {
 
 export function AudioVisualizer({ 
   className, 
-  isPlaying = false,
+  isPlaying = false, 
   data = [] 
 }: AudioVisualizerProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number>();
-  const [visualData, setVisualData] = useState<number[]>(
-    Array.from({ length: 64 }, () => Math.random() * 100)
-  );
-
-  useEffect(() => {
-    if (!isPlaying) {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-      return;
-    }
-
-    const animate = () => {
-      setVisualData(prev => 
-        prev.map(() => Math.random() * 100)
-      );
-      animationRef.current = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, [isPlaying]);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const { width, height } = canvas;
-    const dataToUse = data.length > 0 ? data : visualData;
-    
-    ctx.clearRect(0, 0, width, height);
-
-    const barWidth = width / dataToUse.length;
-    const gradient = ctx.createLinearGradient(0, 0, width, 0);
-    gradient.addColorStop(0, "hsl(262, 73%, 66%)");
-    gradient.addColorStop(0.5, "hsl(187, 92%, 45%)");
-    gradient.addColorStop(1, "hsl(328, 73%, 58%)");
-
-    ctx.fillStyle = gradient;
-
-    dataToUse.forEach((value, index) => {
-      const barHeight = (value / 100) * height * 0.8;
-      const x = index * barWidth;
-      const y = height - barHeight;
-
-      ctx.fillRect(x, y, barWidth - 1, barHeight);
-    });
-  }, [visualData, data]);
-
+  // Simplified stable version - no canvas manipulation that causes crashes
   return (
-    <canvas
-      ref={canvasRef}
-      width={300}
-      height={100}
-      className={cn("bg-github-dark rounded-lg", className)}
-    />
+    <div className={cn("flex items-center justify-center bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-lg p-4", className)}>
+      <div className="flex space-x-1 items-end">
+        {[...Array(12)].map((_, i) => (
+          <div
+            key={i}
+            className={`w-1 bg-gradient-to-t from-purple-400 to-pink-400 rounded-full transition-all duration-300 ${
+              isPlaying ? 'animate-pulse' : ''
+            }`}
+            style={{ 
+              height: isPlaying ? `${20 + Math.sin(Date.now() * 0.005 + i) * 15}px` : '8px' 
+            }}
+          />
+        ))}
+      </div>
+      <div className="ml-4 text-purple-400 text-sm">
+        {isPlaying ? '🎵 Playing' : '⏸ Paused'}
+      </div>
+    </div>
   );
 }
