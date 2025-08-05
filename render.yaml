@@ -1,16 +1,11 @@
 services:
   - type: web
-    name: codeswitch
+    name: codedswitch-website
     env: node
     plan: free
-    buildCommand: npm ci && npx vite build && npx esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
-    startCommand: npm start
+    buildCommand: chmod +x build.sh && ./build.sh
+    startCommand: cd dist && node index.js
+    healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
-      - key: XAI_API_KEY
-        sync: false
-      - key: GEMINI_API_KEY  
-        sync: false
-      - key: DATABASE_URL
-        sync: false
