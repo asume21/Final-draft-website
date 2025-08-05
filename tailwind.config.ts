@@ -2,7 +2,12 @@ import type { Config } from "tailwindcss";
 
 export default {
   darkMode: ["class"],
-  content: ["./client/index.html", "./client/src/**/*.{js,jsx,ts,tsx}"],
+  content: [
+    "./client/index.html", 
+    "./client/src/**/*.{js,jsx,ts,tsx}",
+    "./client/src/**/*.{html,js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{js,jsx,ts,tsx}"
+  ],
   theme: {
     extend: {
       borderRadius: {
@@ -51,6 +56,14 @@ export default {
           "4": "var(--chart-4)",
           "5": "var(--chart-5)",
         },
+        "github-dark": "var(--github-dark)",
+        "github-secondary": "var(--github-secondary)",
+        "github-border": "var(--github-border)",
+        "github-text": "var(--github-text)",
+        "github-text-secondary": "var(--github-text-secondary)",
+        "accent-purple": "var(--accent-purple)",
+        "accent-pink": "var(--accent-pink)",
+        "accent-cyan": "var(--accent-cyan)",
         sidebar: {
           DEFAULT: "var(--sidebar-background)",
           foreground: "var(--sidebar-foreground)",
