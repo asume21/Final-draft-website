@@ -18,9 +18,9 @@ fi
 
 echo "✅ CSS Built Successfully - Size: $CSS_SIZE bytes"
 
-# Build server using production entry point
-echo "Building server..."
-npx esbuild server/production.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/index.js
+# Build server using emergency production entry point
+echo "Building emergency production server..."
+npx esbuild server/emergency-production.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/index.js
 
 # Start server
 echo "Starting production server..."
