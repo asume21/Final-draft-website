@@ -16,7 +16,7 @@ npx vite build --config vite.config.minimal.js
 
 # Build backend using production server (no Vite imports)
 echo "Building backend..."
-npx esbuild server/production.ts --platform=node --packages=external --bundle --format=esm --outdir=dist --outfile=dist/index.js
+npx esbuild server/production.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/index.js
 
 # Create a simple static file server fallback
 cat > dist/serve-static.js << 'EOF'
