@@ -30,9 +30,17 @@ fi
 # Build frontend to dist directory
 npx vite build
 
-# Verify frontend build completed
-if [ ! -d "dist" ]; then
-    echo "❌ Frontend build failed - no dist directory created"
+# Check both possible dist locations
+if [ -d "client/dist" ]; then
+    echo "✓ Found dist in client/dist, moving to root"
+    mv client/dist ./dist
+elif [ -d "dist" ]; then
+    echo "✓ Found dist in root directory"
+else
+    echo "❌ Frontend build failed - no dist directory found"
+    echo "Checking for build output:"
+    ls -la client/ 2>/dev/null || echo "No client directory"
+    ls -la . | grep dist || echo "No dist directory in root"
     exit 1
 fi
 
