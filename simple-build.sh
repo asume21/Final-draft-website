@@ -1,43 +1,65 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Simple production build for Render..."
+echo "🚀 Production build for Render deployment..."
 
-# Install dependencies including devDependencies
+# Show current directory and files for debugging
+echo "📁 Current directory: $(pwd)"
+echo "📁 Contents: $(ls -la)"
+
+# Install dependencies
 echo "📦 Installing dependencies..."
 npm install --include=dev
 
-# Clean builds
-echo "🧹 Cleaning previous builds..."
+# Clean any existing build
+echo "🧹 Cleaning previous build..."
 rm -rf dist/
 
-# Build frontend
+# Build frontend with explicit configuration
 echo "📦 Building frontend..."
 export NODE_ENV=production
-npx vite build --outDir dist
 
-# Build server
+# Check if vite config exists
+if [ -f "vite.config.ts" ]; then
+    echo "✓ Found vite.config.ts"
+else
+    echo "❌ vite.config.ts not found!"
+    exit 1
+fi
+
+# Build frontend to dist directory
+npx vite build
+
+# Verify frontend build completed
+if [ ! -d "dist" ]; then
+    echo "❌ Frontend build failed - no dist directory created"
+    exit 1
+fi
+
+if [ ! -f "dist/index.html" ]; then
+    echo "❌ Frontend build failed - no index.html found"
+    ls -la dist/
+    exit 1
+fi
+
+# Build server bundle
 echo "⚙️ Building server..."
 npx esbuild server/index.ts \
     --platform=node \
     --packages=external \
     --bundle \
     --format=esm \
-    --outfile=dist/index.js \
-    --minify
+    --outfile=dist/index.js
 
-# Verify build
-echo "🧪 Verifying build..."
-if [ ! -d "dist" ] || [ ! -f "dist/index.html" ]; then
-    echo "❌ Frontend build failed"
-    exit 1
-fi
-
+# Verify server build
 if [ ! -f "dist/index.js" ]; then
     echo "❌ Server build failed"
     exit 1
 fi
 
+# Show final build contents
 echo "✅ Build complete!"
-echo "📁 Frontend: $(ls -la dist/index.html | awk '{print $5}') bytes"
-echo "📁 Server: $(ls -la dist/index.js | awk '{print $5}') bytes"
+echo "📁 Build contents:"
+ls -la dist/
+echo "Frontend size: $(wc -c < dist/index.html) bytes"
+echo "Server size: $(wc -c < dist/index.js) bytes"
