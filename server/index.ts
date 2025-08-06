@@ -1,4 +1,5 @@
 import express, { type Request, Response, NextFunction } from "express";
+import path from "path";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
@@ -53,7 +54,22 @@ app.use((req, res, next) => {
   if (app.get("env") === "development") {
     await setupVite(app, server);
   } else {
-    serveStatic(app);
+    // Production static file serving with proper CSS headers
+    const publicPath = path.join(__dirname, "public");
+    app.use(express.static(publicPath, {
+      maxAge: '1d',
+      setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.css')) {
+          res.setHeader('Content-Type', 'text/css; charset=UTF-8');
+          log(`CSS file served: ${filePath}`);
+        }
+      }
+    }));
+    
+    // SPA fallback for production
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(publicPath, 'index.html'));
+    });
   }
 
   // ALWAYS serve the app on the port specified in the environment variable PORT
