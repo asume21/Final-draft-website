@@ -1,24 +1,24 @@
 #!/bin/bash
 set -e
 
-echo "Building CodedSwitch..."
+echo "Building CodedSwitch for Render..."
 
-# Build frontend
+# Install dependencies including devDependencies for build
+echo "Installing all dependencies..."
+npm install --include=dev
+
+# Build frontend using standard vite config
 echo "Building frontend..."
-npx vite build --config vite.config.production.ts
+npx vite build
 
-# Check CSS build
-CSS_FILE=$(find dist/public/assets -name "*.css" | head -1)
-if [ -f "$CSS_FILE" ]; then
-    CSS_SIZE=$(wc -c < "$CSS_FILE")
-    echo "✅ CSS Built Successfully - Size: $CSS_SIZE bytes"
-else
-    echo "❌ CSS build failed"
+# Check if build succeeded
+if [ ! -d "dist" ]; then
+    echo "❌ Frontend build failed - no dist directory"
     exit 1
 fi
 
-# Build PRODUCTION server
-echo "Building production server..."
-npx esbuild server/production.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/index.js
+# Build server
+echo "Building server..."
+npx esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/index.js
 
 echo "✅ Build complete"
