@@ -11,9 +11,11 @@ echo "📁 Contents: $(ls -la)"
 echo "📦 Installing dependencies..."
 npm install --include=dev
 
-# Clean any existing build
-echo "🧹 Cleaning previous build..."
-rm -rf dist/
+# Clean any existing build and all caches
+echo "🧹 Cleaning previous build and all caches..."
+rm -rf dist/ node_modules/.vite client/dist .cache
+# Clear npm cache to ensure fresh dependencies  
+npm cache clean --force 2>/dev/null || true
 
 # Build frontend with explicit configuration
 echo "📦 Building frontend..."
