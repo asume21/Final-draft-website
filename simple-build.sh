@@ -11,9 +11,9 @@ echo "📁 Contents: $(ls -la)"
 echo "📦 Installing dependencies..."
 npm install --include=dev
 
-# Clean any existing build and all caches
-echo "🧹 Cleaning previous build and all caches..."
-rm -rf dist/ node_modules/.vite client/dist .cache
+# Clean any existing build and safe caches
+echo "🧹 Cleaning previous build and safe caches..."
+rm -rf dist/ node_modules/.vite client/dist
 # Clear npm cache to ensure fresh dependencies  
 npm cache clean --force 2>/dev/null || true
 
@@ -59,6 +59,11 @@ if [ ! -f "dist/index.html" ]; then
     exit 1
 fi
 
+# Create temporary directory for frontend assets
+echo "📁 Preserving frontend assets before server build..."
+mkdir -p temp_assets
+cp -r dist/* temp_assets/
+
 # Build server bundle
 echo "⚙️ Building server..."
 npx esbuild server/index.ts \
@@ -67,6 +72,11 @@ npx esbuild server/index.ts \
     --bundle \
     --format=esm \
     --outfile=dist/index.js
+
+# Restore frontend assets
+echo "📁 Restoring frontend assets..."
+cp -r temp_assets/* dist/
+rm -rf temp_assets/
 
 # Verify server build
 if [ ! -f "dist/index.js" ]; then
