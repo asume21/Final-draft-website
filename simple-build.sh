@@ -5,7 +5,7 @@ echo "🚀 Simple production build for Render..."
 
 # Install dependencies including devDependencies
 echo "📦 Installing dependencies..."
-npm ci --include=dev
+npm install --include=dev
 
 # Clean builds
 echo "🧹 Cleaning previous builds..."
