@@ -3,7 +3,7 @@ services:
     name: codedswitch-website
     env: node
     plan: free
-    buildCommand: chmod +x build.sh && ./build.sh
+    buildCommand: chmod +x simple-build.sh && ./simple-build.sh
     startCommand: cd dist && node index.js
     healthCheckPath: /health
     envVars:
