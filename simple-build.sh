@@ -1,31 +1,43 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Building CodedSwitch with simple approach..."
+echo "🚀 Simple production build for Render..."
 
-# Create dist directory
-mkdir -p dist/public
+# Install dependencies including devDependencies
+echo "📦 Installing dependencies..."
+npm ci --include=dev
 
-# Build frontend with NO CONFIG FILES
+# Clean builds
+echo "🧹 Cleaning previous builds..."
+rm -rf dist/
+
+# Build frontend
 echo "📦 Building frontend..."
-VITE_CONFIG_FILE="" npx vite build --outDir dist/public --config /dev/null 2>/dev/null || npx vite build --outDir dist/public
+export NODE_ENV=production
+npx vite build --outDir dist
 
-# Verify CSS was built
-CSS_FILE=$(find dist/public -name "*.css" | head -1)
-if [ -f "$CSS_FILE" ]; then
-    CSS_SIZE=$(wc -c < "$CSS_FILE")
-    echo "✅ CSS Built: $(basename "$CSS_FILE") - $CSS_SIZE bytes"
-else
-    echo "❌ No CSS file found!"
+# Build server
+echo "⚙️ Building server..."
+npx esbuild server/index.ts \
+    --platform=node \
+    --packages=external \
+    --bundle \
+    --format=esm \
+    --outfile=dist/index.js \
+    --minify
+
+# Verify build
+echo "🧪 Verifying build..."
+if [ ! -d "dist" ] || [ ! -f "dist/index.html" ]; then
+    echo "❌ Frontend build failed"
     exit 1
 fi
 
-# Build server
-echo "🔧 Building server..."
-npx esbuild server/production.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/index.js
+if [ ! -f "dist/index.js" ]; then
+    echo "❌ Server build failed"
+    exit 1
+fi
 
-echo "✅ Simple build complete!"
-echo "📁 Files built:"
-ls -la dist/
-echo "📁 Public assets:"
-ls -la dist/public/
+echo "✅ Build complete!"
+echo "📁 Frontend: $(ls -la dist/index.html | awk '{print $5}') bytes"
+echo "📁 Server: $(ls -la dist/index.js | awk '{print $5}') bytes"
