@@ -30,14 +30,19 @@ fi
 # Build frontend to dist directory
 npx vite build
 
-# Check both possible dist locations and move to root
+# Check both possible dist locations and create server-expected structure
 if [ -d "client/dist" ]; then
-    echo "✓ Found dist in client/dist, moving to root"
-    # Move client/dist to root (this is what the server expects)
-    mv client/dist ./dist
+    echo "✓ Found dist in client/dist, creating server-expected structure"
+    # Create dist directory and move client/dist contents to dist/public
+    mkdir -p ./dist/public
+    cp -r client/dist/* ./dist/public/
+    # Also copy to root level for server access
+    cp client/dist/index.html ./dist/
 elif [ -d "dist" ]; then
-    echo "✓ Found dist in root directory"
-    # Dist already in correct location
+    echo "✓ Found dist in root directory, creating server-expected structure"
+    # Create public subdirectory for server
+    mkdir -p ./dist/public
+    cp -r ./dist/* ./dist/public/ 2>/dev/null || true
 else
     echo "❌ Frontend build failed - no dist directory found"
     echo "Checking for build output:"
