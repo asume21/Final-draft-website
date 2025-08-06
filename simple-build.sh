@@ -72,9 +72,32 @@ if [ ! -f "dist/index.js" ]; then
     exit 1
 fi
 
-# Show final build contents
+# Show final build contents and verify structure
 echo "✅ Build complete!"
 echo "📁 Build contents:"
 ls -la dist/
+echo "📁 Public directory contents:"
+ls -la dist/public/
+echo "📁 Assets directory contents:"
+ls -la dist/public/assets/ | head -5
 echo "Frontend size: $(wc -c < dist/index.html) bytes"
 echo "Server size: $(wc -c < dist/index.js) bytes"
+
+# Verify critical files exist
+if [ ! -f "dist/public/index.html" ]; then
+    echo "❌ Missing dist/public/index.html"
+    exit 1
+fi
+
+if [ ! -d "dist/public/assets" ]; then
+    echo "❌ Missing dist/public/assets directory"
+    exit 1
+fi
+
+css_files=$(ls dist/public/assets/*.css 2>/dev/null | wc -l)
+if [ "$css_files" -eq 0 ]; then
+    echo "❌ No CSS files found in dist/public/assets/"
+    exit 1
+fi
+
+echo "✅ All required files present - deployment ready!"
