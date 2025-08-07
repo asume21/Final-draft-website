@@ -59,7 +59,8 @@ app.use((req, res, next) => {
     await setupVite(app, server);
   } else {
     // Production static file serving with proper CSS headers
-    const publicPath = path.join(__dirname, "public");
+    // Vite builds to dist/ so we need to go up one level from the built server
+    const publicPath = path.join(__dirname, "..");
     app.use(express.static(publicPath, {
       maxAge: '1d',
       setHeaders: (res, filePath) => {
